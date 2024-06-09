@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Agendum>
+
+<h2>Resultados de la búsqueda</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Empresa</th>
+            <th>Posición</th>
+            <th>Última conexión</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var agendum in Model)
+        {
+            <tr>
+                <td>@agendum.Firstname</td>
+                <td>@agendum.Lastname</td>
+                <td>@agendum.Company</td>
+                <td>@agendum.Postion</td>
+                <td>@agendum.LastConnection</td>
+            </tr>
+        }
+    </tbody>
+</table>
