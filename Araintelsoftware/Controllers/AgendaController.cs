@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Araintelsoftware.Models;
+using Araintelsoft.Services.Search;
 
 namespace Araintelsoftware.Controllers
 {
@@ -22,6 +23,18 @@ namespace Araintelsoftware.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.Agenda.ToListAsync());
+        }
+
+        public async Task<IActionResult> Search(string searchFirstname, string searchLastname, string searchCompany)
+
+        {
+
+            var buscadorService = new BuscadorService(_context);
+
+            var contactos = await buscadorService.GetContactos(searchFirstname, searchLastname, searchCompany);
+
+            return View("Search", contactos);
+
         }
 
         // GET: Agenda/Details/5

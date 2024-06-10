@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,21 +14,10 @@ namespace Araintelsoftware.Areas.Identity.Data
 
         public string LastName { get; set; }
 
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-
-        public string FullName
-
-        {
-
-            get { return FirstName + " " + LastName; }
-
-            set
-
-            {
-
-            }
-        }
-
+        [DataType(DataType.Date)]
+        [Range(typeof(DateTime), "1/1/1900", "1/1/2100")]
+        public DateTime Birthdate { get; set; }
     }
 }
+
+

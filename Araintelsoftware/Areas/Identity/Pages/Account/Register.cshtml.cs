@@ -114,11 +114,9 @@ public class RegisterModel : PageModel
         public string LastName { get; set; }
 
 
-        [Required]
-
-        [Display(Name = "Full Name")]
-
-        public string FullName { get; set; }
+        [DataType(DataType.Date)]
+        [Range(typeof(DateTime), "1/1/1900", "1/1/2100")]
+        public DateTime Birthdate { get; set; }
 
     }
 
@@ -135,21 +133,15 @@ public class RegisterModel : PageModel
 
 
     public async Task<IActionResult> OnPostAsync(string returnUrl = null)
-
     {
-
         returnUrl ??= Url.Content("~/");
 
         ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
         if (ModelState.IsValid)
-
         {
-
             var user = new SampleUser
-
             {
-
                 UserName = Input.Email,
 
                 Email = Input.Email,
@@ -158,82 +150,59 @@ public class RegisterModel : PageModel
 
                 LastName = Input.LastName,
 
-                FullName = Input.FullName
-
+                Birthdate = Input.Birthdate // <--- Add this line
             };
 
 
-            await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-
-            await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-
+            // Create the user
             var result = await _userManager.CreateAsync(user, Input.Password);
 
-
             if (result.Succeeded)
-
             {
-
                 _logger.LogInformation("User created a new account with password.");
 
-
+                // Get the user ID
                 var userId = await _userManager.GetUserIdAsync(user);
 
+                // Generate email confirmation token
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
+                // Create callback URL for email confirmation
                 var callbackUrl = Url.Page(
-
                     "/Account/ConfirmEmail",
-
                     pageHandler: null,
-
                     values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-
                     protocol: Request.Scheme);
 
-
+                // Send email confirmation email
                 await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-
+                // Check if email confirmation is required
                 if (_userManager.Options.SignIn.RequireConfirmedAccount)
-
                 {
-
                     return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-
                 }
-
                 else
-
                 {
-
+                    // Sign in the user
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
                     return LocalRedirect(returnUrl);
-
                 }
-
             }
-
-            foreach (var error in result.Errors)
-
+            else
             {
-
-                ModelState.AddModelError(string.Empty, error.Description);
-
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
-
         }
 
-
         // If we got this far, something failed, redisplay form
-
         return Page();
-
     }
 
     private SampleUser CreateUser()

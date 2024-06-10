@@ -49,37 +49,68 @@
         </tr>
     </thead>
     <tbody>
+
         @foreach (var item in Model)
+
         {
+
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Firstname)
-                </th>
+
                 <td>
+
+                    @Html.DisplayFor(modelItem => item.Firstname)
+
+                </td>
+
+                <td>
+
                     @Html.DisplayFor(modelItem => item.Lastname)
+
                 </td>
+
                 <td>
+
                     @Html.DisplayFor(modelItem => item.Url)
+
                 </td>
+
                 <td>
+
                     @Html.DisplayFor(modelItem => item.Mail)
+
                 </td>
+
                 <td>
+
                     @Html.DisplayFor(modelItem => item.Company)
+
                 </td>
+
                 <td>
+
                     @Html.DisplayFor(modelItem => item.Postion)
+
                 </td>
+
                 <td>
+
                     @Html.DisplayFor(modelItem => item.LastConnection)
+
                 </td>
+
                 <td>
+
                     <a asp-action="Edit" asp-route-id="@item.Firstname">Edit</a> |
+
                     <a asp-action="Details" asp-route-id="@item.Firstname">Details</a> |
+
                     <a asp-action="Delete" asp-route-id="@item.Firstname">Delete</a>
+
                 </td>
+
             </tr>
+
         }
+
     </tbody>
 </table>
-

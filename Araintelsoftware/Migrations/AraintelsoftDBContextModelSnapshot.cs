@@ -46,11 +46,11 @@ namespace Araintelsoftware.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<string>("FullName")
+                    b.Property<DateTime>("Birthdate")
+
                         .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("LastName")
                         .IsRequired()

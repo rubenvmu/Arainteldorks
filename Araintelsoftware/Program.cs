@@ -22,10 +22,13 @@ var araintelsqlConnectionString = $"Server={sqlServerConfig["Server"]};Database=
 
 // Add services to the container
 // Servicios de Identity
-builder.Services.AddIdentity<SampleUser, IdentityRole>()
-    .AddEntityFrameworkStores<AraintelsoftDBContext>()
-    .AddDefaultTokenProviders()
-    .AddUserManager<UserManager<SampleUser>>();
+builder.Services.AddIdentity<SampleUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+})
+.AddEntityFrameworkStores<AraintelsoftDBContext>()
+.AddDefaultTokenProviders()
+.AddUserManager<UserManager<SampleUser>>();
 
 // Servicios de Email
 builder.Services.AddSingleton<InterfazEmailSender>(provider => new EmailSender(builder.Configuration));
