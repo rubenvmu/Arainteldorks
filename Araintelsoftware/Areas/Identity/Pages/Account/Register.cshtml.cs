@@ -99,6 +99,14 @@ public class RegisterModel : PageModel
 
         public string ConfirmPassword { get; set; }
 
+        [DataType(DataType.PhoneNumber)]
+
+        [Display(Name = "Añadir número de teléfono")]
+
+        [StringLength(12, MinimumLength = 0)]
+
+        public string PhoneNumber { get; set; }
+
 
         [Required]
 
@@ -149,7 +157,9 @@ public class RegisterModel : PageModel
 
                 LastName = Input.LastName,
 
-                Birthdate = Input.Birthdate // <--- Add this line
+                Birthdate = Input.Birthdate,
+                
+                PhoneNumber = Input.PhoneNumber
             };
 
 

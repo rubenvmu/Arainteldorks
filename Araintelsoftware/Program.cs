@@ -11,17 +11,12 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Leer configuración desde archivo
 var config = builder.Configuration;
 
-// Connection strings
 var sqlServerConfig = config.GetSection("SqlServer");
 var araintelsoftConnectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User ID={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
 var araintelsqlConnectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User ID={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
 
-// Add services to the container
-// Servicios de Identity
 builder.Services.AddIdentity<SampleUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = true;
@@ -30,11 +25,9 @@ builder.Services.AddIdentity<SampleUser, IdentityRole>(options =>
 .AddDefaultTokenProviders()
 .AddUserManager<UserManager<SampleUser>>();
 
-// Servicios de Email
 builder.Services.AddSingleton<InterfazEmailSender>(provider => new EmailSender(builder.Configuration));
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
-// Servicios de DbContext
 builder.Services.AddDbContext<AraintelsqlContext>(
     options => options.UseSqlServer(araintelsqlConnectionString));
 builder.Services.AddDbContext<AraintelsoftDBContext>(
@@ -60,12 +53,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
-
-// Rutas de la aplicación
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -76,7 +65,6 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-// Create the database and apply migrations
 using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<AraintelsoftDBContext>();
