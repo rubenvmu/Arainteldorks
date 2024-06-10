@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Identity;
 using Araintelsoft.Services.Search;
 using System.Configuration;
 using Araintelsoftware.Areas.Identity.Data;
+using Araintelsoftware.Services.EmailSender;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,22 +24,19 @@ var araintelsqlConnectionString = $"Server={sqlServerConfig["Server"]};Database=
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// AraintelsoftDBContext
-builder.Services.AddDbContext<AraintelsoftDBContext>(
-    options => options.UseSqlServer(araintelsoftConnectionString));
+builder.Services.AddSingleton<InterfazEmailSender>(provider => new EmailSender(builder.Configuration)); ;
 
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
-// AraintelsqlContext
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+   .AddEntityFrameworkStores<AraintelsoftDBContext>()
+   .AddDefaultTokenProviders();
+
 builder.Services.AddDbContext<AraintelsqlContext>(
     options => options.UseSqlServer(araintelsqlConnectionString));
 
-// Identity
-builder.Services.AddIdentity<IdentityUser, IdentityRole<string>>(options => options.SignIn.RequireConfirmedAccount = true)
-  .AddEntityFrameworkStores<AraintelsoftDBContext>()
-  .AddRoles<IdentityRole<string>>()
-  .AddDefaultTokenProviders()
-  .AddUserManager<UserManager<IdentityUser>>();
+builder.Services.AddDbContext<AraintelsoftDBContext>(
+    options => options.UseSqlServer(araintelsoftConnectionString));
 
 // Services
 builder.Services.AddScoped<IBuscadorLinkedinService, BuscadorService>();
@@ -71,4 +70,5 @@ app.MapControllerRoute(
     defaults: new { controller = "Agenda", action = "Search" });
 
 app.MapRazorPages();
+
 app.Run();
