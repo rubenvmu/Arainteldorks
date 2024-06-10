@@ -16,6 +16,7 @@ var config = builder.Configuration;
 var sqlServerConfig = config.GetSection("SqlServer");
 var araintelsoftConnectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User ID={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
 var araintelsqlConnectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User ID={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
+var AragonDorksContextConnectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User ID={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
 
 builder.Services.AddIdentity<SampleUser, IdentityRole>(options =>
 {
@@ -55,6 +56,8 @@ builder.Services.AddDbContext<AraintelsqlContext>(
     options => options.UseSqlServer(araintelsqlConnectionString));
 builder.Services.AddDbContext<AraintelsoftDBContext>(
     options => options.UseSqlServer(araintelsoftConnectionString));
+builder.Services.AddDbContext<AragonDorksContext>(
+    options => options.UseSqlServer(araintelsoftConnectionString));
 
 // Servicios de Buscador
 builder.Services.AddScoped<IBuscadorLinkedinService, BuscadorService>();
@@ -87,6 +90,12 @@ app.MapControllerRoute(
     defaults: new { controller = "Agenda", action = "Search" });
 
 app.MapRazorPages();
+
+using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
+{
+    var context = serviceScope.ServiceProvider.GetRequiredService<AragonDorksContext>();
+    context.Database.Migrate();
+}
 
 
 app.MapControllerRoute(
