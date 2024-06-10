@@ -28,5 +28,6 @@ namespace Araintelsoftware.Areas.Identity.Data
 
             }
         }
-}
+
+    }
 }

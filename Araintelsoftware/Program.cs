@@ -17,36 +17,38 @@ var config = builder.Configuration;
 
 // Connection strings
 var sqlServerConfig = config.GetSection("SqlServer");
+var araintelsoftConnectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User ID={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
+var araintelsqlConnectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User ID={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
 
-var araintelsoftConnectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=True;MultipleActiveResultSets=true";
-var araintelsqlConnectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=True;MultipleActiveResultSets=true";
+// Add services to the container
+// Servicios de Identity
+builder.Services.AddIdentity<SampleUser, IdentityRole>()
+    .AddEntityFrameworkStores<AraintelsoftDBContext>()
+    .AddDefaultTokenProviders()
+    .AddUserManager<UserManager<SampleUser>>();
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-builder.Services.AddSingleton<InterfazEmailSender>(provider => new EmailSender(builder.Configuration)); ;
-
+// Servicios de Email
+builder.Services.AddSingleton<InterfazEmailSender>(provider => new EmailSender(builder.Configuration));
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
-builder.Services.AddIdentity<SampleUser, IdentityRole>()
-  .AddEntityFrameworkStores<AraintelsoftDBContext>()
-  .AddDefaultTokenProviders();
-
+// Servicios de DbContext
 builder.Services.AddDbContext<AraintelsqlContext>(
     options => options.UseSqlServer(araintelsqlConnectionString));
-
 builder.Services.AddDbContext<AraintelsoftDBContext>(
     options => options.UseSqlServer(araintelsoftConnectionString));
 
-// Services
+// Servicios de Buscador
 builder.Services.AddScoped<IBuscadorLinkedinService, BuscadorService>();
 
 // Razor Pages
 builder.Services.AddRazorPages();
 
+// Controllers with Views
+builder.Services.AddControllersWithViews();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -60,10 +62,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// Rutas de la aplicación
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
 app.MapControllerRoute(
     name: "search",
     pattern: "Agenda/Search",
@@ -77,5 +79,15 @@ using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().Create
     var context = serviceScope.ServiceProvider.GetRequiredService<AraintelsoftDBContext>();
     context.Database.Migrate();
 }
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapRazorPages();
+    endpoints.MapAreaControllerRoute(
+        name: "Identity",
+        areaName: "Identity",
+        pattern: "Identity/{controller=Account}/{action=Login}/{id?}");
+});
 
 app.Run();

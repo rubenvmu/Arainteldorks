@@ -15,13 +15,13 @@ public class RegisterModel : PageModel
 
 {
 
-    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly SignInManager<SampleUser> _signInManager;
 
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<SampleUser> _userManager;
 
-    private readonly IUserStore<IdentityUser> _userStore;
+    private readonly IUserStore<SampleUser> _userStore;
 
-    private readonly IUserEmailStore<IdentityUser> _emailStore;
+    private readonly IUserEmailStore<SampleUser> _emailStore;
 
     private readonly ILogger<RegisterModel> _logger;
 
@@ -30,11 +30,11 @@ public class RegisterModel : PageModel
 
     public RegisterModel(
 
-        UserManager<IdentityUser> userManager,
+        UserManager<SampleUser> userManager,
 
-        IUserStore<IdentityUser> userStore,
+        IUserStore<SampleUser> userStore,
 
-        SignInManager<IdentityUser> signInManager,
+        SignInManager<SampleUser> signInManager,
 
         ILogger<RegisterModel> logger,
 
