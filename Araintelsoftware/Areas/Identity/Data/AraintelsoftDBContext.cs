@@ -29,11 +29,20 @@ namespace Araintelsoftware.Data
     }
 
     public class ApplicationUserEntityConfiguration : IEntityTypeConfiguration<SampleUser>
+
     {
+
         public void Configure(EntityTypeBuilder<SampleUser> builder)
+
         {
+
             builder.Property(u => u.FirstName).HasMaxLength(30);
+
             builder.Property(u => u.LastName).HasMaxLength(40);
+
+            builder.Property(u => u.Birthdate).HasColumnType("date");
+
         }
+
     }
 }

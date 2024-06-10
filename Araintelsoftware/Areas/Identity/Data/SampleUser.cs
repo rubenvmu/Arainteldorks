@@ -18,5 +18,3 @@ namespace Araintelsoftware.Areas.Identity.Data
         public DateTime Birthdate { get; set; }
     }
 }
-
-
