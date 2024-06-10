@@ -115,7 +115,6 @@ public class RegisterModel : PageModel
 
 
         [DataType(DataType.Date)]
-        [Range(typeof(DateTime), "1/1/1900", "1/1/2100")]
         public DateTime Birthdate { get; set; }
 
     }
