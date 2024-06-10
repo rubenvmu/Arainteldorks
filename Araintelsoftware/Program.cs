@@ -23,10 +23,33 @@ builder.Services.AddIdentity<SampleUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<AraintelsoftDBContext>()
 .AddDefaultTokenProviders()
-.AddUserManager<UserManager<SampleUser>>();
+.AddUserManager<UserManager<SampleUser>>()
+.AddSignInManager<SignInManager<SampleUser>>();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 6;
+});
 
 builder.Services.AddSingleton<InterfazEmailSender>(provider => new EmailSender(builder.Configuration));
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+
+builder.Services.AddAuthentication(options =>
+
+{
+
+    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+
+    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+
+    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+
+});
+
 
 builder.Services.AddDbContext<AraintelsqlContext>(
     options => options.UseSqlServer(araintelsqlConnectionString));
@@ -64,6 +87,19 @@ app.MapControllerRoute(
     defaults: new { controller = "Agenda", action = "Search" });
 
 app.MapRazorPages();
+
+
+app.MapControllerRoute(
+
+    name: "default",
+
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+app.MapControllerRoute(
+    name: "dashboard",
+    pattern: "Dashboard",
+    defaults: new { controller = "Dashboard", action = "Index" });
 
 using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
 {

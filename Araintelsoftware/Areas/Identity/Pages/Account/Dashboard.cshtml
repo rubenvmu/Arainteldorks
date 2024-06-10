@@ -1,0 +1,16 @@
+﻿@page
+@model DashboardModel
+
+<h1>Welcome to the Dashboard!</h1>
+
+<p>You have successfully logged in.</p>
+
+<p>Your email address is: @User.Identity.Name</p>
+
+<p><a asp-page="/Logout">Logout</a></p>
+
+@section Scripts {
+    <script>
+        console.log("You are now logged in!");
+    </script>
+}

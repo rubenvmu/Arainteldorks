@@ -1,15 +1,13 @@
 ﻿using Araintelsoftware.Areas.Identity.Data;
 using Araintelsoftware.Services.EmailSender;
-using Azure.Core;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Policy;
-using System.Text.Encodings.Web;
 using System.Text;
+using System.Text.Encodings.Web;
 
 public class RegisterModel : PageModel
 
@@ -99,11 +97,13 @@ public class RegisterModel : PageModel
 
         public string ConfirmPassword { get; set; }
 
-        [DataType(DataType.PhoneNumber)]
+        [Required]
 
-        [Display(Name = "Añadir número de teléfono")]
+        [Display(Name = "Phone Number")]
 
         [StringLength(12, MinimumLength = 0)]
+
+        [RegularExpression(@"^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d$", ErrorMessage = "Invalid phone number format.")]
 
         public string PhoneNumber { get; set; }
 
@@ -112,12 +112,16 @@ public class RegisterModel : PageModel
 
         [Display(Name = "First Name")]
 
+        [RegularExpression(@"^[a-zA-Z ]*$", ErrorMessage = "First name can only contain letters and spaces.")]
+
         public string FirstName { get; set; }
 
 
         [Required]
 
         [Display(Name = "Last Name")]
+
+        [RegularExpression(@"^[a-zA-Z ]*$", ErrorMessage = "Last name can only contain letters and spaces.")]
 
         public string LastName { get; set; }
 
@@ -150,54 +154,51 @@ public class RegisterModel : PageModel
             var user = new SampleUser
             {
                 UserName = Input.Email,
-
                 Email = Input.Email,
-
                 FirstName = Input.FirstName,
-
                 LastName = Input.LastName,
-
                 Birthdate = Input.Birthdate,
-                
                 PhoneNumber = Input.PhoneNumber
             };
 
-
-            // Create the user
             var result = await _userManager.CreateAsync(user, Input.Password);
 
             if (result.Succeeded)
             {
                 _logger.LogInformation("User created a new account with password.");
 
-                // Get the user ID
                 var userId = await _userManager.GetUserIdAsync(user);
-
-                // Generate email confirmation token
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-                // Create callback URL for email confirmation
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmail",
                     pageHandler: null,
                     values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                     protocol: Request.Scheme);
 
-                // Send email confirmation email
-                await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                try
+                {
+                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                // Check if email confirmation is required
+                    await _emailSender.SendEmailAsync("business@araintel.com", "New user registration",
+                        $"A new user has registered with the following details: {Input.Email}, {Input.FirstName} {Input.LastName}");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "An error occurred while sending the confirmation email.");
+                    ModelState.AddModelError(string.Empty, "Error sending confirmation email. Please try again later.");
+                    return Page();
+                }
+
                 if (_userManager.Options.SignIn.RequireConfirmedAccount)
                 {
                     return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                 }
                 else
                 {
-                    // Sign in the user
                     await _signInManager.SignInAsync(user, isPersistent: false);
-
                     return LocalRedirect(returnUrl);
                 }
             }
@@ -210,7 +211,6 @@ public class RegisterModel : PageModel
             }
         }
 
-        // If we got this far, something failed, redisplay form
         return Page();
     }
 
