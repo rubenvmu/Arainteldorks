@@ -7,20 +7,38 @@ namespace Araintelsoftware.Models;
 
 public partial class AraintelsqlContext : DbContext
 {
+    private readonly IConfiguration _configuration;
+
+
     public AraintelsqlContext()
+
     {
+
     }
 
-    public AraintelsqlContext(DbContextOptions<AraintelsqlContext> options)
+    public AraintelsqlContext(DbContextOptions<AraintelsqlContext> options, IConfiguration configuration)
+
         : base(options)
+
     {
+
+        _configuration = configuration;
+
     }
 
     public virtual DbSet<Agendum> Agenda { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=araintelsql.database.windows.net;Database=araintelsql;User=AraintelAdministrator;Password=AraintelSQL*");
+
+    {
+
+        var sqlServerConfig = _configuration.GetSection("SqlServer");
+
+        var connectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User ID={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
+
+        optionsBuilder.UseSqlServer(connectionString);
+
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
