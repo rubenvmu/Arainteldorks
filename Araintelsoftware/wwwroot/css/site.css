@@ -43,3 +43,15 @@ body {
     background-color: white;
     color: black;
 }
+
+/* styles.css */
+.hero {
+    background-image: url('https://i.ibb.co/f0N4r3r/image.png');
+    background-size: cover;
+    background-position: center;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
