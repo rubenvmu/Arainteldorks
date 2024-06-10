@@ -22,7 +22,7 @@ namespace Araintelsoftware.Areas.Identity.Data
 
             get { return FirstName + " " + LastName; }
 
-            private set
+            set
 
             {
 

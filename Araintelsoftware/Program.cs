@@ -28,9 +28,9 @@ builder.Services.AddSingleton<InterfazEmailSender>(provider => new EmailSender(b
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-   .AddEntityFrameworkStores<AraintelsoftDBContext>()
-   .AddDefaultTokenProviders();
+builder.Services.AddIdentity<SampleUser, IdentityRole>()
+  .AddEntityFrameworkStores<AraintelsoftDBContext>()
+  .AddDefaultTokenProviders();
 
 builder.Services.AddDbContext<AraintelsqlContext>(
     options => options.UseSqlServer(araintelsqlConnectionString));
@@ -70,5 +70,12 @@ app.MapControllerRoute(
     defaults: new { controller = "Agenda", action = "Search" });
 
 app.MapRazorPages();
+
+// Create the database and apply migrations
+using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
+{
+    var context = serviceScope.ServiceProvider.GetRequiredService<AraintelsoftDBContext>();
+    context.Database.Migrate();
+}
 
 app.Run();
