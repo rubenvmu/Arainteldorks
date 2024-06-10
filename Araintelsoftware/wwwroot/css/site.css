@@ -26,3 +26,20 @@ body {
   width: 100%;
   font-size: 12px;
 }
+
+#smally {
+    font-size: 12px;
+}
+
+#bigy {
+    font-size: 40px;
+}
+
+#medy {
+    font-size: 16px;
+}
+
+.login-dark {
+    background-color: white;
+    color: black;
+}
