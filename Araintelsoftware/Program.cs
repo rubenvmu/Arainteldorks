@@ -9,6 +9,7 @@ using Araintelsoftware.Areas.Identity.Data;
 using Araintelsoftware.Services.EmailSender;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Araintelsoftware.Services.Search;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -61,6 +62,7 @@ builder.Services.AddDbContext<AragonDorksContext>(
 
 // Servicios de Buscador
 builder.Services.AddScoped<IBuscadorLinkedinService, BuscadorService>();
+builder.Services.AddScoped<IBuscadorAragondorks, BuscadorAragondorks>();
 
 // Razor Pages
 builder.Services.AddRazorPages();
@@ -88,6 +90,10 @@ app.MapControllerRoute(
     name: "search",
     pattern: "Agenda/Search",
     defaults: new { controller = "Agenda", action = "Search" });
+app.MapControllerRoute(
+    name: "searchdorks",
+    pattern: "AragonDorks/searchDorks",
+    defaults: new { controller = "AragonDorks", action = "SearchDorks" });
 
 app.MapRazorPages();
 

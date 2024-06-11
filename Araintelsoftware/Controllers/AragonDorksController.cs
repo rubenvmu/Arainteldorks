@@ -43,6 +43,27 @@ namespace Araintelsoftware.Controllers
             return View(aragonDork);
         }
 
+        public async Task<IActionResult> searchDorks(int? id, string searchString)
+        {
+            ViewData["CurrentId"] = id;
+            ViewData["CurrentFilter"] = searchString;
+
+            var aragonDorks = from d in _context.AragonDorks
+                              select d;
+
+            if (id.HasValue)
+            {
+                aragonDorks = aragonDorks.Where(d => d.Id.ToString().Contains(id.ToString()));
+            }
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                aragonDorks = aragonDorks.Where(d => d.DorkValue.Contains(searchString));
+            }
+
+            return View("Index", await aragonDorks.ToListAsync());
+        }
+
         // GET: AragonDorks/Create
         public IActionResult Create()
         {
