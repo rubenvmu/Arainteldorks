@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Araintelsoftware.Models;
+﻿namespace Araintelsoftware.Models;
 
 public partial class Agendum
 {

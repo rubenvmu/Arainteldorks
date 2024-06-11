@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Araintelsoftware.Models;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Araintelsoftware.Models;
 
@@ -77,5 +74,5 @@ public partial class AraintelsqlContext : DbContext
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
-public DbSet<Araintelsoftware.Models.Secrets> Secrets { get; set; } = default!;
+    public DbSet<Araintelsoftware.Models.Secrets> Secrets { get; set; } = default!;
 }

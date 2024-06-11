@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Araintelsoftware.Data
 {
 
-    public class AragonDorksContext : DbContext 
+    public class AragonDorksContext : DbContext
     {
         private readonly IConfiguration _configuration;
 

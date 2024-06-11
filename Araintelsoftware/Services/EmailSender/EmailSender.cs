@@ -1,6 +1,6 @@
 ﻿using Araintelsoftware.Services.EmailSender;
-using System.Net.Mail;
 using System.Net;
+using System.Net.Mail;
 
 public class EmailSender : InterfazEmailSender
 

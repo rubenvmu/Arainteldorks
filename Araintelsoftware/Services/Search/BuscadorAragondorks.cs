@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Araintelsoftware.Data;
 using Araintelsoftware.Models;
-using Araintelsoftware.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Araintelsoftware.Services.Search
 {

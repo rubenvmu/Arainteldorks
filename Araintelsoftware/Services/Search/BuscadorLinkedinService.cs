@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Araintelsoftware.Models;
+﻿using Araintelsoftware.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Araintelsoft.Services.Search
 {
@@ -15,7 +15,7 @@ namespace Araintelsoft.Services.Search
         public async Task<IEnumerable<Agendum>> GetContactos(string searchFirstname, string searchLastname, string searchCompany)
         {
             var contactos = from m in _context.Agenda
-                select m;
+                            select m;
 
             if (!String.IsNullOrEmpty(searchFirstname))
             {

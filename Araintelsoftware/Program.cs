@@ -1,15 +1,11 @@
-using Araintelsoftware.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Araintelsoftware.Data;
-using Microsoft.AspNetCore.Identity;
 using Araintelsoft.Services.Search;
-using System.Configuration;
 using Araintelsoftware.Areas.Identity.Data;
+using Araintelsoftware.Data;
+using Araintelsoftware.Models;
 using Araintelsoftware.Services.EmailSender;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Araintelsoftware.Services.Search;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -69,6 +65,10 @@ builder.Services.AddRazorPages();
 
 // Controllers with Views
 builder.Services.AddControllersWithViews();
+builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
+{
+    ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
+});
 
 var app = builder.Build();
 
