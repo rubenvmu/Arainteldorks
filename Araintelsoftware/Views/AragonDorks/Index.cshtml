@@ -4,12 +4,14 @@
     ViewData["Title"] = "Index";
 }
 
+<input type="search" id="search-input" placeholder="Buscar">
 <h1>AragonDorks</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+
+<table class="table" id="table-sm">
     <thead>
         <tr>
             <th>
@@ -18,7 +20,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="table-body">
         @foreach (var item in Model)
         {
             <tr>
@@ -34,3 +36,44 @@
         }
     </tbody>
 </table>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        let input = document.getElementById("search-input");
+
+        let tableBody = document.getElementById("table-body");
+
+
+        input.addEventListener("input", function () {
+
+            let filter = input.value.toUpperCase();
+
+            let rows = tableBody.rows;
+
+
+            for (let i = 0; i < rows.length; i++) {
+
+                let cells = rows[i].cells;
+
+                let dorkValue = cells[0].innerText.toUpperCase();
+
+
+                if (dorkValue.indexOf(filter) > -1) {
+
+                    rows[i].style.display = "";
+
+                } else {
+
+                    rows[i].style.display = "none";
+
+                }
+
+            }
+
+        });
+
+    });
+
+</script>
