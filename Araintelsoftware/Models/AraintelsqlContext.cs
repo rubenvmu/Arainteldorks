@@ -4,38 +4,13 @@ namespace Araintelsoftware.Models;
 
 public partial class AraintelsqlContext : DbContext
 {
-    private readonly IConfiguration _configuration;
-
-
-    public AraintelsqlContext()
-
-    {
-
-    }
-
-    public AraintelsqlContext(DbContextOptions<AraintelsqlContext> options, IConfiguration configuration)
-
+    public AraintelsqlContext(DbContextOptions<AraintelsqlContext> options)
         : base(options)
-
     {
-
-        _configuration = configuration;
-
     }
 
     public virtual DbSet<Agendum> Agenda { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-
-    {
-
-        var sqlServerConfig = _configuration.GetSection("SqlServer");
-
-        var connectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User ID={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
-
-        optionsBuilder.UseSqlServer(connectionString);
-
-    }
+    public virtual DbSet<Secrets> Secrets { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -73,6 +48,4 @@ public partial class AraintelsqlContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-    public DbSet<Araintelsoftware.Models.Secrets> Secrets { get; set; } = default!;
 }

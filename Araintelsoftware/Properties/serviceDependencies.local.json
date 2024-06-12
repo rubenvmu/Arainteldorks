@@ -11,7 +11,7 @@
       "secretStore": null,
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/Araintelsoftwarevault",
       "type": "secrets.keyVault",
-      "connectionId": "VariableSecreta"
+      "connectionId": "KeyVaultUrl"
     }
   }
 }

@@ -8,36 +8,55 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Azure.Identity;
 using Microsoft.Data.SqlClient;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Azure.Security.KeyVault.Secrets;
+using Microsoft.AspNetCore.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VariableSecreta"));
+var KeyVaultUrl = new Uri(builder.Configuration.GetSection("KeyVaultUrl").Value!);
 
-// Now you can access the secrets from IConfiguration
-var config = builder.Configuration;
+var azureCredential = new DefaultAzureCredential();
 
-var sqlServerConfig = config.GetSection("SqlServer");
-var server = sqlServerConfig["Server"];
-var agendaSecretKey = config["AgendaSecretKey"];
-var database = sqlServerConfig["Database"];
-var user = sqlServerConfig["User"];
-var password = sqlServerConfig["Password"];
 
-var araintelsqlConnectionString = $"Server={server};Database={database};User={user};Password={password};Trusted_Connection=False;MultipleActiveResultSets=true";
-var araintelsoftConnectionString = $"Server={server};Database={database};User={user};Password={password};Trusted_Connection=False;MultipleActiveResultSets=true";
-var AragonDorksContextConnectionString = $"Server={server};Database={database};User={user};Password={password};Trusted_Connection=False;MultipleActiveResultSets=true";
+builder.Configuration.AddAzureKeyVault(KeyVaultUrl, azureCredential);
 
-var instrumentationKey = config["InstrumentationKey"];
-var ingestionEndpoint = config["IngestionEndpoint"];
-var liveEndpoint = config["LiveEndpoint"];
-var applicationId = config["ApplicationId"];
+var config = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
 
-builder.Services.AddDbContext<AraintelsoftDBContext>(
-    options => options.UseSqlServer(config.GetConnectionString("AraintelsoftDB")));
-builder.Services.AddDbContext<AraintelsqlContext>(
-    options => options.UseSqlServer(config.GetConnectionString("Araintelsql")));
-builder.Services.AddDbContext<AragonDorksContext>(
-    options => options.UseSqlServer(config.GetConnectionString("AragonDorks")));
+
+builder.Configuration.AddAzureKeyVault(KeyVaultUrl, azureCredential);
+
+
+var cs = builder.Configuration.GetSection("araintelsqldb").Value;
+
+
+builder.Services.AddDbContext<AraintelsoftDBContext>(options =>
+
+{
+
+    options.UseSqlServer(cs);
+
+});
+
+
+builder.Services.AddDbContext<AraintelsqlContext>(options =>
+
+{
+
+    options.UseSqlServer(cs);
+
+});
+
+
+builder.Services.AddDbContext<AragonDorksContext>(options =>
+
+{
+
+    options.UseSqlServer(cs);
+
+});
+
+
 
 builder.Services.AddIdentity<SampleUser, IdentityRole>(options =>
 {
