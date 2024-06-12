@@ -126,7 +126,6 @@ app.MapRazorPages();
 using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<AragonDorksContext>();
-    context.Database.Migrate();
 }
 
 
