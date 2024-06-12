@@ -1,21 +1,12 @@
 {
   "dependencies": {
-    "appInsights1": {
-      "type": "appInsights",
-      "connectionId": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-      "dynamicId": null
-    },
     "mssql1": {
       "type": "mssql",
       "connectionId": "ConnectionStrings:AraintelsqlDBContextConnection"
     },
     "secrets1": {
       "type": "secrets",
-      "connectionId": "VaultUri"
-    },
-    "secrets2": {
-      "type": "secrets",
-      "connectionId": null
+      "connectionId": "VariableSecreta"
     }
   }
 }

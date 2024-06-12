@@ -17,7 +17,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "VaultUri": "https://araintelsoftwarevault.vault.azure.net/",
-        "AZURE_USERNAME": "839946@unizar.es"
+        "AZURE_USERNAME": "839946@unizar.es",
+        "VariableSecreta": "https://araintelsoftwarevault.vault.azure.net/"
       }
     },
     "https": {
@@ -28,7 +29,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "VaultUri": "https://araintelsoftwarevault.vault.azure.net/",
-        "AZURE_USERNAME": "839946@unizar.es"
+        "AZURE_USERNAME": "839946@unizar.es",
+        "VariableSecreta": "https://araintelsoftwarevault.vault.azure.net/"
       }
     },
     "IIS Express": {
@@ -37,7 +39,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "VaultUri": "https://araintelsoftwarevault.vault.azure.net/",
-        "AZURE_USERNAME": "839946@unizar.es"
+        "AZURE_USERNAME": "839946@unizar.es",
+        "VariableSecreta": "https://araintelsoftwarevault.vault.azure.net/"
       }
     }
   }

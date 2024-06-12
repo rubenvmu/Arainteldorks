@@ -11,22 +11,33 @@ using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri"));
-builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new VisualStudioCredential());
+var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VariableSecreta"));
+builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
+
+// Now you can access the secrets from IConfiguration
 var config = builder.Configuration;
 
 var sqlServerConfig = config.GetSection("SqlServer");
+var server = sqlServerConfig["Server"];
+var database = sqlServerConfig["Database"];
+var user = sqlServerConfig["User"];
+var password = sqlServerConfig["Password"];
 
-var araintelsoftConnectionString = $"Server={config["SqlServer:Server"]};Database={config["SqlServer:Database"]};User ID={config["SqlServer:User"]};Password={config["SqlServer:Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
-var araintelsqlConnectionString = $"Server={config["SqlServer:Server"]};Database={config["SqlServer:Database"]};User ID={config["SqlServer:User"]};Password={config["SqlServer:Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
-var AragonDorksContextConnectionString = $"Server={config["SqlServer:Server"]};Database={config["SqlServer:Database"]};User ID={config["SqlServer:User"]};Password={config["SqlServer:Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
+var araintelsqlConnectionString = $"Server={server};Database={database};User={user};Password={password};Trusted_Connection=False;MultipleActiveResultSets=true";
+var araintelsoftConnectionString = $"Server={server};Database={database};User={user};Password={password};Trusted_Connection=False;MultipleActiveResultSets=true";
+var AragonDorksContextConnectionString = $"Server={server};Database={database};User={user};Password={password};Trusted_Connection=False;MultipleActiveResultSets=true";
 
-builder.Services.AddDbContext<AraintelsqlContext>(
-    options => options.UseSqlServer(config["ConnectionStrings:AraintelsqlDBContextConnection"]));
+var instrumentationKey = config["InstrumentationKey"];
+var ingestionEndpoint = config["IngestionEndpoint"];
+var liveEndpoint = config["LiveEndpoint"];
+var applicationId = config["ApplicationId"];
+
 builder.Services.AddDbContext<AraintelsoftDBContext>(
-    options => options.UseSqlServer(config["ConnectionStrings:AraintelsoftDBContextConnection"]));
+    options => options.UseSqlServer(config.GetConnectionString("AraintelsoftDB")));
+builder.Services.AddDbContext<AraintelsqlContext>(
+    options => options.UseSqlServer(config.GetConnectionString("Araintelsql")));
 builder.Services.AddDbContext<AragonDorksContext>(
-    options => options.UseSqlServer(config["ConnectionStrings:AragonDorksContextConnectionString"]));
+    options => options.UseSqlServer(config.GetConnectionString("AragonDorks")));
 
 builder.Services.AddIdentity<SampleUser, IdentityRole>(options =>
 {
@@ -124,11 +135,6 @@ app.MapControllerRoute(
     pattern: "Dashboard",
     defaults: new { controller = "Dashboard", action = "Index" });
 
-using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
-{
-    var context = serviceScope.ServiceProvider.GetRequiredService<AraintelsoftDBContext>();
-    context.Database.Migrate();
-}
 
 app.UseEndpoints(endpoints =>
 {
