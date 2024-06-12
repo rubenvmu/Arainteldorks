@@ -1,23 +1,30 @@
 ﻿using Araintelsoft.Services.Search;
 using Araintelsoftware.Models;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 namespace Araintelsoftware.Controllers
 {
+
     public class AgendaController : Controller
     {
         private readonly AraintelsqlContext _context;
+        private readonly IConfiguration _configuration;
 
-        public AgendaController(AraintelsqlContext context)
+        public AgendaController(AraintelsqlContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: Agenda
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Agenda.ToListAsync());
+            var agenda = await _context.Agenda.ToListAsync();
+            return View(agenda);
         }
 
         public async Task<IActionResult> Search(string searchFirstname, string searchLastname, string searchCompany)
@@ -50,10 +57,34 @@ namespace Araintelsoftware.Controllers
             return View(agendum);
         }
 
-        // GET: Agenda/Create
-        public IActionResult Create()
+        [HttpPost]
+        public IActionResult ValidatePassword(string password)
         {
-            return View();
+            var agendaSecretKey = _configuration["AgendaSecretKey"];
+
+            if (password == agendaSecretKey)
+            {
+                HttpContext.Session.SetString("IsValidPassword", "true");
+                return Json(new { isValid = true });
+            }
+            else
+            {
+                return Json(new { isValid = false });
+            }
+        }
+
+        [HttpGet]
+        public IActionResult _TablePartial()
+        {
+            if (HttpContext.Session.GetString("IsValidPassword") == "true")
+            {
+                var model = _context.Agenda.ToList();
+                return PartialView("_TablePartial", model);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home"); // o cualquier otra acción que desees
+            }
         }
 
         // POST: Agenda/Create

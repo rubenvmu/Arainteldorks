@@ -14,11 +14,13 @@ var builder = WebApplication.CreateBuilder(args);
 var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VariableSecreta"));
 builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
 
+
 // Now you can access the secrets from IConfiguration
 var config = builder.Configuration;
 
 var sqlServerConfig = config.GetSection("SqlServer");
 var server = sqlServerConfig["Server"];
+var agendaSecretKey = config["AgendaSecretKey"];
 var database = sqlServerConfig["Database"];
 var user = sqlServerConfig["User"];
 var password = sqlServerConfig["Password"];
@@ -59,6 +61,12 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.AddSingleton<InterfazEmailSender>(provider => new EmailSender(config));
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 builder.Services.AddAuthentication(options =>
 
@@ -101,6 +109,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseSession();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",

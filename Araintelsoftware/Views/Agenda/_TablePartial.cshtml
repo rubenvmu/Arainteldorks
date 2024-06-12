@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Araintelsoftware.Models.Agendum>
+
+<table>
+    <thead>
+        <tr>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Url</th>
+            <th>Mail</th>
+            <th>Company</th>
+            <th>Postion</th>
+            <th>LastConnection</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Firstname</td>
+                <td>@item.Lastname</td>
+                <td>@item.Url</td>
+                <td>@item.Mail</td>
+                <td>@item.Company</td>
+                <td>@item.Postion</td>
+                <td>@item.LastConnection</td>
+            </tr>
+        }
+    </tbody>
+</table>

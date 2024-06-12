@@ -6,111 +6,57 @@
 
 <h3>Contactos de LinkedIn</h3>
 
-<form asp-controller="Agenda" asp-action="Search" method="get">
-    <p>
-        Filtrar:
-        Nombre <input type="text" name="searchFirstname" /> Apellido: <input type="text" name="searchLastname" /> Empresa: <input type="text" name="searchCompany" />
-        <input type="submit" value="Filter" />
-    </p>
-</form>
+<div id="table-container">
+    @if (((Microsoft.AspNetCore.Http.ISession)Context.Session).GetString("IsValidPassword") == "true")
+    {
+        <form asp-controller="Agenda" asp-action="Search" method="get">
+            <p>
+                Filtrar:
+                Nombre <input type="text" name="searchFirstname" /> Apellido: <input type="text" name="searchLastname" /> Empresa: <input type="text" name="searchCompany" />
+                <input type="submit" value="Filter" />
+            </p>
+        </form>
 
-<p>
-    <a asp-action="Create">Agregar nuevo contacto</a>
+        <p>
+            <a asp-action="Create">Agregar nuevo contacto</a>
+        </p>
+
+        @Html.Partial("_TablePartial", Model)
+    }
+    else
+    {
+        <p id="error-message">Ingrese la contraseña correcta para ver la tabla</p>
+    }
+</div>
+
+<p style="color:red">
+    Premium: Ingresa la contraseña: <input type="password" id="vault-password" />
+    <button id="submit-password">Ingresar</button>
 </p>
 
-
-<table class="table" id="table-sm">
-    <thead>
-        <tr>
-            <th>
-
-                @Html.DisplayNameFor(model => model.Firstname)
-
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Lastname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Url)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mail)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Company)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Postion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastConnection)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @foreach (var item in Model)
-
-        {
-
-            <tr>
-
-                <td>
-
-                    @Html.DisplayFor(modelItem => item.Firstname)
-
-                </td>
-
-                <td>
-
-                    @Html.DisplayFor(modelItem => item.Lastname)
-
-                </td>
-
-                <td>
-
-                    @Html.DisplayFor(modelItem => item.Url)
-
-                </td>
-
-                <td>
-
-                    @Html.DisplayFor(modelItem => item.Mail)
-
-                </td>
-
-                <td>
-
-                    @Html.DisplayFor(modelItem => item.Company)
-
-                </td>
-
-                <td>
-
-                    @Html.DisplayFor(modelItem => item.Postion)
-
-                </td>
-
-                <td>
-
-                    @Html.DisplayFor(modelItem => item.LastConnection)
-
-                </td>
-
-                <td>
-
-                    <a asp-action="Edit" asp-route-id="@item.Firstname">Edit</a> |
-
-                    <a asp-action="Details" asp-route-id="@item.Firstname">Details</a> |
-
-                    <a asp-action="Delete" asp-route-id="@item.Firstname">Delete</a>
-
-                </td>
-
-            </tr>
-
-        }
-
-    </tbody>
-</table>
+<script>
+    $(document).ready(function () {
+        $('#submit-password').click(function () {
+            var password = $('#vault-password').val();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ValidatePassword", "Agenda")',
+                data: { password: password },
+                success: function (result) {
+                    if (result.isValid) {
+                        $('#error-message').hide();
+                        $.ajax({
+                            type: 'GET',
+                            url: '@Url.Action("_TablePartial", "Agenda")',
+                            success: function (html) {
+                                $('#table-container').html(html);
+                            }
+                        });
+                    } else {
+                        $('#error-message').text('Contraseña incorrecta');
+                    }
+                }
+            });
+        });
+    });
+</script>
