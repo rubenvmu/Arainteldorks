@@ -6,14 +6,27 @@ using Araintelsoftware.Services.EmailSender;
 using Araintelsoftware.Services.Search;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Azure.Identity;
+using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri"));
+builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new VisualStudioCredential());
 var config = builder.Configuration;
 
 var sqlServerConfig = config.GetSection("SqlServer");
-var araintelsoftConnectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User ID={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
-var araintelsqlConnectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User ID={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
-var AragonDorksContextConnectionString = $"Server={sqlServerConfig["Server"]};Database={sqlServerConfig["Database"]};User ID={sqlServerConfig["User"]};Password={sqlServerConfig["Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
+
+var araintelsoftConnectionString = $"Server={config["SqlServer:Server"]};Database={config["SqlServer:Database"]};User ID={config["SqlServer:User"]};Password={config["SqlServer:Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
+var araintelsqlConnectionString = $"Server={config["SqlServer:Server"]};Database={config["SqlServer:Database"]};User ID={config["SqlServer:User"]};Password={config["SqlServer:Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
+var AragonDorksContextConnectionString = $"Server={config["SqlServer:Server"]};Database={config["SqlServer:Database"]};User ID={config["SqlServer:User"]};Password={config["SqlServer:Password"]};Trusted_Connection=False;MultipleActiveResultSets=true";
+
+builder.Services.AddDbContext<AraintelsqlContext>(
+    options => options.UseSqlServer(config["ConnectionStrings:AraintelsqlDBContextConnection"]));
+builder.Services.AddDbContext<AraintelsoftDBContext>(
+    options => options.UseSqlServer(config["ConnectionStrings:AraintelsoftDBContextConnection"]));
+builder.Services.AddDbContext<AragonDorksContext>(
+    options => options.UseSqlServer(config["ConnectionStrings:AragonDorksContextConnectionString"]));
 
 builder.Services.AddIdentity<SampleUser, IdentityRole>(options =>
 {
@@ -33,7 +46,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredLength = 6;
 });
 
-builder.Services.AddSingleton<InterfazEmailSender>(provider => new EmailSender(builder.Configuration));
+builder.Services.AddSingleton<InterfazEmailSender>(provider => new EmailSender(config));
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 builder.Services.AddAuthentication(options =>
@@ -49,12 +62,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-builder.Services.AddDbContext<AraintelsqlContext>(
-    options => options.UseSqlServer(araintelsqlConnectionString));
-builder.Services.AddDbContext<AraintelsoftDBContext>(
-    options => options.UseSqlServer(araintelsoftConnectionString));
-builder.Services.AddDbContext<AragonDorksContext>(
-    options => options.UseSqlServer(araintelsoftConnectionString));
+
 
 // Servicios de Buscador
 builder.Services.AddScoped<IBuscadorLinkedinService, BuscadorService>();
