@@ -15,48 +15,20 @@ using Microsoft.AspNetCore.Hosting;
 var builder = WebApplication.CreateBuilder(args);
 
 var KeyVaultUrl = new Uri(builder.Configuration.GetSection("KeyVaultUrl").Value!);
-
 var azureCredential = new DefaultAzureCredential();
-
 
 builder.Configuration.AddAzureKeyVault(KeyVaultUrl, azureCredential);
 
 var config = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
 
-
-builder.Configuration.AddAzureKeyVault(KeyVaultUrl, azureCredential);
-
-
 var cs = builder.Configuration.GetSection("araintelsqldb").Value;
 
 
-builder.Services.AddDbContext<AraintelsoftDBContext>(options =>
-
-{
-
-    options.UseSqlServer(cs);
-
-});
 
 
-builder.Services.AddDbContext<AraintelsqlContext>(options =>
-
-{
-
-    options.UseSqlServer(cs);
-
-});
-
-
-builder.Services.AddDbContext<AragonDorksContext>(options =>
-
-{
-
-    options.UseSqlServer(cs);
-
-});
-
-
+builder.Services.AddDbContext<AraintelsoftDBContext>(options => options.UseSqlServer(cs));
+builder.Services.AddDbContext<AraintelsqlContext>(options => options.UseSqlServer(cs));
+builder.Services.AddDbContext<AragonDorksContext>(options => options.UseSqlServer(cs));
 
 builder.Services.AddIdentity<SampleUser, IdentityRole>(options =>
 {
@@ -78,6 +50,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.AddSingleton<InterfazEmailSender>(provider => new EmailSender(config));
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -86,29 +59,18 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddAuthentication(options =>
-
 {
-
     options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
-
     options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
-
     options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-
 });
 
-
-
-
-// Servicios de Buscador
 builder.Services.AddScoped<IBuscadorLinkedinService, BuscadorService>();
 builder.Services.AddScoped<IBuscadorAragondorks, BuscadorAragondorks>();
 
-// Razor Pages
 builder.Services.AddRazorPages();
-
-// Controllers with Views
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
 {
     ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
@@ -116,7 +78,6 @@ builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsigh
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -126,15 +87,24 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
 app.UseSession();
 app.UseAuthorization();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "dashboard",
+    pattern: "Dashboard",
+    defaults: new { controller = "Dashboard", action = "Index" });
+
 app.MapControllerRoute(
     name: "search",
     pattern: "Agenda/Search",
     defaults: new { controller = "Agenda", action = "Search" });
+
 app.MapControllerRoute(
     name: "searchdorks",
     pattern: "AragonDorks/searchDorks",
@@ -146,20 +116,6 @@ using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().Create
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<AragonDorksContext>();
 }
-
-
-app.MapControllerRoute(
-
-    name: "default",
-
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-
-app.MapControllerRoute(
-    name: "dashboard",
-    pattern: "Dashboard",
-    defaults: new { controller = "Dashboard", action = "Index" });
-
 
 app.UseEndpoints(endpoints =>
 {

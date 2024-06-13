@@ -20,12 +20,17 @@ namespace Araintelsoftware.Data
             builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
         }
 
-        public DbSet<SampleUser> Users { get; set; }
-        public DbSet<IdentityRole<string>> Roles { get; set; }
-        public DbSet<IdentityUserRole<string>> UserRoles { get; set; }
-        public DbSet<IdentityUserClaim<string>> UserClaims { get; set; }
-        public DbSet<IdentityUserLogin<string>> UserLogins { get; set; }
-        public DbSet<IdentityUserToken<string>> UserTokens { get; set; }
+        public override DbSet<SampleUser> Users { get; set; }
+
+        public override DbSet<IdentityRole<string>> Roles { get; set; }
+
+        public override DbSet<IdentityUserRole<string>> UserRoles { get; set; }
+
+        public override DbSet<IdentityUserClaim<string>> UserClaims { get; set; }
+
+        public override DbSet<IdentityUserLogin<string>> UserLogins { get; set; }
+
+        public override DbSet<IdentityUserToken<string>> UserTokens { get; set; }
     }
 
     public class ApplicationUserEntityConfiguration : IEntityTypeConfiguration<SampleUser>
