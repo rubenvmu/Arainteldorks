@@ -1,4 +1,4 @@
-﻿namespace Araintelsoftware.Services
+﻿namespace Araintelsoftware.Models
 {
     public class SqlServerConfig
     {
