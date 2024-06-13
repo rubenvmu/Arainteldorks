@@ -20,21 +20,21 @@ public class EmailSender : InterfazEmailSender
 
 
     public EmailSender(IConfiguration configuration)
-
     {
+        _senderEmail = configuration["EmailSettings:SenderEmail"] ?? string.Empty;
+        _senderName = configuration["EmailSettings:SenderName"] ?? string.Empty;
+        _smtpServer = configuration["EmailSettings:SmtpServer"] ?? string.Empty;
+        _smtpUsername = configuration["EmailSettings:SmtpUsername"] ?? string.Empty;
+        _smtpPassword = configuration["EmailSettings:SmtpPassword"] ?? string.Empty;
 
-        _senderEmail = configuration["EmailSettings:SenderEmail"];
-
-        _senderName = configuration["EmailSettings:SenderName"];
-
-        _smtpServer = configuration["EmailSettings:SmtpServer"];
-
-        _smtpPort = int.Parse(configuration["EmailSettings:SmtpPort"]);
-
-        _smtpUsername = configuration["EmailSettings:SmtpUsername"];
-
-        _smtpPassword = configuration["EmailSettings:SmtpPassword"];
-
+        if (int.TryParse(configuration["EmailSettings:SmtpPort"], out int smtpPort))
+        {
+            _smtpPort = smtpPort;
+        }
+        else
+        {
+            // Manejar el caso en que no se pueda parsear el puerto SMTP
+        }
     }
 
 

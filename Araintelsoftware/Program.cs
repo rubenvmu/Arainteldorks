@@ -23,8 +23,7 @@ var config = builder.Services.BuildServiceProvider().GetService<IConfiguration>(
 
 var cs = builder.Configuration.GetSection("araintelsqldb").Value;
 
-
-
+builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AraintelsoftDBContext>(options => options.UseSqlServer(cs));
 builder.Services.AddDbContext<AraintelsqlContext>(options => options.UseSqlServer(cs));
@@ -48,7 +47,17 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredLength = 6;
 });
 
-builder.Services.AddSingleton<InterfazEmailSender>(provider => new EmailSender(config));
+builder.Services.AddSingleton<InterfazEmailSender>(provider =>
+{
+    if (config != null)
+    {
+        return new EmailSender(config);
+    }
+    else
+    {
+        throw new ArgumentNullException(nameof(config), "La configuración es necesaria para crear una instancia de EmailSender");
+    }
+});
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 builder.Services.AddSession(options =>
@@ -112,19 +121,22 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
+if (app.Services != null)
 {
-    var context = serviceScope.ServiceProvider.GetRequiredService<AragonDorksContext>();
+    using (var serviceScope = app.Services.GetService<IServiceScopeFactory>()?.CreateScope())
+    {
+        if (serviceScope != null)
+        {
+            var context = serviceScope.ServiceProvider.GetRequiredService<AragonDorksContext>();
+        }
+    }
 }
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-    endpoints.MapRazorPages();
-    endpoints.MapAreaControllerRoute(
-        name: "Identity",
-        areaName: "Identity",
-        pattern: "Identity/{controller=Account}/{action=Login}/{id?}");
-});
+app.MapControllers();
+app.MapRazorPages();
+app.MapAreaControllerRoute(
+    name: "Identity",
+    areaName: "Identity",
+    pattern: "Identity/{controller=Account}/{action=Login}/{id?}");
 
 app.Run();

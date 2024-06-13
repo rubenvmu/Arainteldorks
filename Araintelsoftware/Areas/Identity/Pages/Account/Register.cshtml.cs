@@ -86,7 +86,7 @@ public class RegisterModel : PageModel
 
         [Display(Name = "Password")]
 
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
 
         [DataType(DataType.Password)]
@@ -105,7 +105,7 @@ public class RegisterModel : PageModel
 
         [RegularExpression(@"^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d$", ErrorMessage = "Invalid phone number format.")]
 
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
 
         [Required]

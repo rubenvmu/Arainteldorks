@@ -24,12 +24,12 @@ namespace Araintelsoft.Services.Search
 
             if (!String.IsNullOrEmpty(searchLastname))
             {
-                contactos = contactos.Where(s => s.Lastname.Contains(searchLastname));
+                contactos = contactos.Where(s => s.Lastname != null && s.Lastname.Contains(searchLastname));
             }
 
             if (!String.IsNullOrEmpty(searchCompany))
             {
-                contactos = contactos.Where(s => s.Company.Contains(searchCompany));
+                contactos = contactos.Where(s => s.Company != null && s.Company.Contains(searchCompany));
             }
 
             return await contactos.ToListAsync();

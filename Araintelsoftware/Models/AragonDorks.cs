@@ -3,7 +3,7 @@
 {
     public class AragonDork
     {
-        public string Id { get; set; }
-        public string DorkValue { get; set; }
+        public string? Id { get; set; }
+        public string? DorkValue { get; set; }
     }
 }
