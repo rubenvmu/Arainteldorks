@@ -1,23 +1,21 @@
-﻿using Araintelsoftware.Services.EmailSender;
+﻿using System;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 
-public class EmailSender : InterfazEmailSender
-
+public interface IEmailSender
 {
+    Task SendEmailAsync(string email, string subject, string message);
+}
 
+public class EmailSender : IEmailSender
+{
     private readonly string _senderEmail;
-
     private readonly string _senderName;
-
     private readonly string _smtpServer;
-
     private readonly int _smtpPort;
-
     private readonly string _smtpUsername;
-
     private readonly string _smtpPassword;
-
 
     public EmailSender(IConfiguration configuration)
     {
@@ -33,51 +31,41 @@ public class EmailSender : InterfazEmailSender
         }
         else
         {
-            // Manejar el caso en que no se pueda parsear el puerto SMTP
+            // Handle the case where SMTP port cannot be parsed
         }
     }
 
+    public EmailSender(string senderEmail, string senderName, string smtpServer, int smtpPort, string smtpUsername, string smtpPassword)
+    {
+        _senderEmail = senderEmail;
+        _senderName = senderName;
+        _smtpServer = smtpServer;
+        _smtpPort = smtpPort;
+        _smtpUsername = smtpUsername;
+        _smtpPassword = smtpPassword;
+    }
 
     public async Task SendEmailAsync(string email, string subject, string message)
-
     {
-
-        // Utiliza la configuración para enviar el correo electrónico
+        // Use configuration to send email
 
         using (var smtpClient = new SmtpClient())
-
         {
-
             smtpClient.Host = _smtpServer;
-
             smtpClient.Port = _smtpPort;
-
             smtpClient.EnableSsl = true;
-
             smtpClient.Credentials = new NetworkCredential(_smtpUsername, _smtpPassword);
 
-
             using (var mailMessage = new MailMessage())
-
             {
-
                 mailMessage.From = new MailAddress(_senderEmail, _senderName);
-
                 mailMessage.To.Add(email);
-
                 mailMessage.Subject = subject;
-
                 mailMessage.Body = message;
-
                 mailMessage.IsBodyHtml = true;
 
-
                 await smtpClient.SendMailAsync(mailMessage);
-
             }
-
         }
-
     }
-
 }

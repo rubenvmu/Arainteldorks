@@ -8,16 +8,10 @@ using System.Text;
 
 namespace Araintelsoftware.Areas.Identity.Pages.Account
 {
-    public class ResetPasswordModel : PageModel
+    public class ResetPasswordModel(UserManager<SampleUser> userManager, SignInManager<SampleUser> signInManager) : PageModel
     {
-        private readonly UserManager<SampleUser> _userManager;
-        private readonly SignInManager<SampleUser> _signInManager;
-
-        public ResetPasswordModel(UserManager<SampleUser> userManager, SignInManager<SampleUser> signInManager)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-        }
+        private readonly UserManager<SampleUser> _userManager = userManager;
+        private readonly SignInManager<SampleUser> _signInManager = signInManager;
 
         [BindProperty]
         public InputModel Input { get; set; }

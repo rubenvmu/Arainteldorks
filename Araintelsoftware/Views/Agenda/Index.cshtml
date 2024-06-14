@@ -1,62 +1,15 @@
 ﻿@model IEnumerable<Araintelsoftware.Models.Agendum>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "AralinkDb";
 }
+<div style="height: 40px;"></div>
 
-<h3>Contactos de LinkedIn</h3>
+<h3>AralinkDb</h3>
 
-<div id="table-container">
-    @if (((Microsoft.AspNetCore.Http.ISession)Context.Session).GetString("IsValidPassword") == "true")
-    {
-        <form asp-controller="Agenda" asp-action="Search" method="get">
-            <p>
-                Filtrar:
-                Nombre <input type="text" name="searchFirstname" /> Apellido: <input type="text" name="searchLastname" /> Empresa: <input type="text" name="searchCompany" />
-                <input type="submit" value="Filter" />
-            </p>
-        </form>
+<partial name="FiltroComponent" model="Model" />
 
-        <p>
-            <a asp-action="Create">Agregar nuevo contacto</a>
-        </p>
+<partial name="AgendaTableComponent" model="Model" />
 
-        @Html.Partial("_TablePartial", Model)
-    }
-    else
-    {
-        <p id="error-message">Ingrese la contraseña correcta para ver la tabla</p>
-    }
-</div>
+<partial name="LicenseKeyForm" model="Model" />
 
-<p style="color:red">
-    Premium: Ingresa la contraseña: <input type="password" id="vault-password" />
-    <button id="submit-password">Ingresar</button>
-</p>
-
-<script>
-    $(document).ready(function () {
-        $('#submit-password').click(function () {
-            var password = $('#vault-password').val();
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("ValidatePassword", "Agenda")',
-                data: { password: password },
-                success: function (result) {
-                    if (result.isValid) {
-                        $('#error-message').hide();
-                        $.ajax({
-                            type: 'GET',
-                            url: '@Url.Action("_TablePartial", "Agenda")',
-                            success: function (html) {
-                                $('#table-container').html(html);
-                            }
-                        });
-                    } else {
-                        $('#error-message').text('Contraseña incorrecta');
-                    }
-                }
-            });
-        });
-    });
-</script>

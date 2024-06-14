@@ -2,7 +2,6 @@ using Araintelsoft.Services.Search;
 using Araintelsoftware.Areas.Identity.Data;
 using Araintelsoftware.Data;
 using Araintelsoftware.Models;
-using Araintelsoftware.Services.EmailSender;
 using Araintelsoftware.Services.Search;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,6 @@ var azureCredential = new DefaultAzureCredential();
 
 builder.Configuration.AddAzureKeyVault(KeyVaultUrl, azureCredential);
 
-var config = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
 
 var cs = builder.Configuration.GetSection("araintelsqldb").Value;
 
@@ -47,17 +45,8 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredLength = 6;
 });
 
-builder.Services.AddSingleton<InterfazEmailSender>(provider =>
-{
-    if (config != null)
-    {
-        return new EmailSender(config);
-    }
-    else
-    {
-        throw new ArgumentNullException(nameof(config), "La configuración es necesaria para crear una instancia de EmailSender");
-    }
-});
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 builder.Services.AddSession(options =>
@@ -78,12 +67,7 @@ builder.Services.AddScoped<IBuscadorLinkedinService, BuscadorService>();
 builder.Services.AddScoped<IBuscadorAragondorks, BuscadorAragondorks>();
 
 builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews();
-
-builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
-{
-    ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
-});
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -110,27 +94,9 @@ app.MapControllerRoute(
     defaults: new { controller = "Dashboard", action = "Index" });
 
 app.MapControllerRoute(
-    name: "search",
-    pattern: "Agenda/Search",
-    defaults: new { controller = "Agenda", action = "Search" });
-
-app.MapControllerRoute(
     name: "searchdorks",
     pattern: "AragonDorks/searchDorks",
     defaults: new { controller = "AragonDorks", action = "SearchDorks" });
-
-app.MapRazorPages();
-
-if (app.Services != null)
-{
-    using (var serviceScope = app.Services.GetService<IServiceScopeFactory>()?.CreateScope())
-    {
-        if (serviceScope != null)
-        {
-            var context = serviceScope.ServiceProvider.GetRequiredService<AragonDorksContext>();
-        }
-    }
-}
 
 app.MapControllers();
 app.MapRazorPages();

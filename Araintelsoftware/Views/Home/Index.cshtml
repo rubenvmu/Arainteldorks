@@ -1,40 +1,18 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
 <link href="~/css/site.css" rel="stylesheet" />
 
-<header style="height: 40px;"></header>
+<div style="height: 40px;"></div>
 
 <div class="row">
+    <partial name="Tarjeta1" model="Model" />
     <div class="col-md-3">
-        <div class="card mb-1">
-            <img src="https://i.ibb.co/JrGfyWm/1677582979919.jpg" class="card-img-top" alt="https://i.ibb.co/JrGfyWm/1677582979919.jpg">
-            <div class="card-body">
-                <strong><h6 class="card-title">Araintelsoft GIT</h6></strong>
-                <p class="card-text text-truncate"></p>
-                <a href="https://github.com/rvmu-rvmu/Araintelsoft.NET.git" class="btn btn-sm btn-dark">Explore Araintel.NET</a>
-            </div>
-        </div>
+        <partial name="Tarjeta2" model="Model" />
     </div>
     <div class="col-md-3">
-        <div class="card mb-1">
-            <img src="https://i.ibb.co/7ywzW5d/1677582979919.jpg" class="card-img-top" alt="https://i.ibb.co/7ywzW5d/1677582979919.jpg">
-            <div class="card-body">
-                <strong> <h6 class="card-title">LinkedinDB</h6></strong>
-                <p class="card-text text-truncate"></p>
-                <a asp-area="" asp-controller="Agenda" asp-action="Index" class="btn btn-sm btn-dark">Access LinkedinDB</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card mb-1">
-            <img src="https://i.ibb.co/7YbzQZD/Overview-of-Google-Dorks.jpg" class="card-img-top" alt="https://i.ibb.co/7ywzW5d/1677582979919.jpg">
-            <div class="card-body">
-                <strong> <h6 class="card-title">AraDorks</h6></strong>
-                <p class="card-text text-truncate"></p>
-                <a asp-area="" asp-controller="AragonDorks" asp-action="Index" class="btn btn-sm btn-dark">Access Dork List</a>
-            </div>
-        </div>
+        <partial name="Tarjeta3" model="Model" />
     </div>
 </div>
+

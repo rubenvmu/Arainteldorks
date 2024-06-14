@@ -1,15 +1,16 @@
-﻿@model IEnumerable<Agendum>
+﻿@model IEnumerable<Araintelsoftware.Models.Agendum>
 
-<h2>Resultados de la búsqueda</h2>
+@{
+}
 
-<table class="table">
+
+<table class="table" id="table-sm">
     <thead>
         <tr>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Empresa</th>
-            <th>Posición</th>
-            <th>Última conexión</th>
+            <th>Puesto</th>
         </tr>
     </thead>
     <tbody>
@@ -20,7 +21,6 @@
                 <td>@agendum.Lastname</td>
                 <td>@agendum.Company</td>
                 <td>@agendum.Postion</td>
-                <td>@agendum.LastConnection</td>
             </tr>
         }
     </tbody>

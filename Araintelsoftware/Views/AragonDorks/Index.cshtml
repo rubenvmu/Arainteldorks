@@ -1,53 +1,14 @@
-﻿@using Araintelsoftware.Models
-
-@model IEnumerable<AragonDork>
+﻿@model IEnumerable<AragonDork>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Aradorks";
 }
 
-<div style="height:20px"></div>
+<div style="height: 40px;"></div>
 
 <h2>AraDorks</h2>
 
-<form asp-action="SearchDorks" method="get">
-    <input type="search" id="search-input" placeholder="Buscar" name="searchString" value="@ViewData["CurrentFilter"]" />
-    <input type="number" id="id-input" placeholder="ID" name="id" value="@ViewData["CurrentId"]" />
-    <input type="submit" value="Search" class="btn btn-dark" /><p><input type="button" value="Atrás" onclick="location.href='@Url.Action("Index", "Home")'" class="btn btn-dark" /></p>
-</form>
+<partial name="FiltroComponentAragonDorks" model="Model" />
 
-<table class="table" id="table-sm">
-    <thead>
-        <tr>
-        </tr>
-    </thead>
-    <tbody id="table-body">
-        @if (Model.Count() == 0)
-        {
-            <tr>
-                <td colspan="6">No results found.</td>
-            </tr>
-        }
-        else
-        {
-            @for (int i = 0; i < Model.Count(); i += 6)
-            {
-                <tr>
-                    @for (int j = 0; j < 6; j++)
-                    {
-                        if (i + j < Model.Count())
-                        {
-                            <td>
-                                <a href="https://www.google.com/search?q=@Model.ElementAt(i + j).DorkValue" target="_blank">@Model.ElementAt(i + j).DorkValue</a>
-                            </td>
-                        }
-                        else
-                        {
-                            <td></td>
-                        }
-                    }
-                </tr>
-            }
-        }
-    </tbody>
-</table>
+<partial name="TablaDorks" model="Model" />
+

@@ -1,0 +1,10 @@
+﻿@model IEnumerable<AragonDork>
+
+@{
+}
+
+<form asp-action="SearchDorks" method="get">
+    <input type="search" id="search-input" placeholder="Buscar" name="searchString" value="@ViewData["CurrentFilter"]" />
+    <input type="number" id="id-input" placeholder="ID" name="id" value="@ViewData["CurrentId"]" />
+    <input type="submit" value="Search" class="btn btn-dark" /><p><input type="button" value="Atrás" onclick="location.href='@Url.Action("Index", "Home")'" class="btn btn-dark" /></p>
+</form>

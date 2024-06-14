@@ -1,5 +1,4 @@
 ﻿using Araintelsoftware.Areas.Identity.Data;
-using Araintelsoftware.Services.EmailSender;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +23,7 @@ public class RegisterModel : PageModel
     private readonly ILogger<RegisterModel> _logger;
 
 
-    private readonly InterfazEmailSender _emailSender;
+    private readonly IEmailSender _emailSender;
 
     public RegisterModel(
 
@@ -36,7 +35,7 @@ public class RegisterModel : PageModel
 
         ILogger<RegisterModel> logger,
 
-        InterfazEmailSender emailSender)
+        IEmailSender emailSender)
 
     {
 
@@ -56,13 +55,13 @@ public class RegisterModel : PageModel
 
     [BindProperty]
 
-    public InputModel Input { get; set; }
+    public InputModel? Input { get; set; }
 
 
-    public string ReturnUrl { get; set; }
+    public string? ReturnUrl { get; set; }
 
 
-    public IList<AuthenticationScheme> ExternalLogins { get; set; }
+    public IList<AuthenticationScheme>? ExternalLogins { get; set; }
 
 
     public class InputModel
@@ -214,10 +213,7 @@ public class RegisterModel : PageModel
         return Page();
     }
 
-    private SampleUser CreateUser()
-    {
-        return new SampleUser();
-    }
+    private SampleUser CreateUser() => new SampleUser();
 
     private IUserEmailStore<SampleUser> GetEmailStore()
 

@@ -1,15 +1,18 @@
 ﻿@model IEnumerable<Araintelsoftware.Models.Agendum>
 
-<table>
+@{
+    ViewData["Title"] = "AralinkDb";
+}
+
+<table class="table" id="table-sm">
     <thead>
         <tr>
-            <th>Firstname</th>
-            <th>Lastname</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
             <th>Url</th>
             <th>Mail</th>
-            <th>Company</th>
-            <th>Postion</th>
-            <th>LastConnection</th>
+            <th>Empresa</th>
+            <th>Puesto</th>
         </tr>
     </thead>
     <tbody>
@@ -22,7 +25,6 @@
                 <td>@item.Mail</td>
                 <td>@item.Company</td>
                 <td>@item.Postion</td>
-                <td>@item.LastConnection</td>
             </tr>
         }
     </tbody>
