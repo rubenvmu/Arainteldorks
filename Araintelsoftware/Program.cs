@@ -1,52 +1,17 @@
-using Araintelsoft.Services.Search;
-using Araintelsoftware.Areas.Identity.Data;
-using Araintelsoftware.Data;
-using Araintelsoftware.Models;
-using Araintelsoftware.Services.Search;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Azure.Identity;
-using Microsoft.Data.SqlClient;
-using Azure.Extensions.AspNetCore.Configuration.Secrets;
-using Azure.Security.KeyVault.Secrets;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var KeyVaultUrl = new Uri(builder.Configuration.GetSection("KeyVaultUrl").Value!);
-var azureCredential = new DefaultAzureCredential();
-
-builder.Configuration.AddAzureKeyVault(KeyVaultUrl, azureCredential);
-
-
-var cs = builder.Configuration.GetSection("araintelsqldb").Value;
-
-builder.Services.AddControllers();
-
-builder.Services.AddDbContext<AraintelsoftDBContext>(options => options.UseSqlServer(cs));
-builder.Services.AddDbContext<AraintelsqlContext>(options => options.UseSqlServer(cs));
-builder.Services.AddDbContext<AragonDorksContext>(options => options.UseSqlServer(cs));
-
-builder.Services.AddIdentity<SampleUser, IdentityRole>(options =>
+builder.WebHost.ConfigureKestrel(options =>
 {
-    options.SignIn.RequireConfirmedAccount = true;
-})
-.AddEntityFrameworkStores<AraintelsoftDBContext>()
-.AddDefaultTokenProviders()
-.AddUserManager<UserManager<SampleUser>>()
-.AddSignInManager<SignInManager<SampleUser>>();
-
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequiredLength = 6;
+    options.Listen(IPAddress.Loopback, 5003);  // Cambiar el puerto aquí
 });
 
-builder.Services.AddTransient<IEmailSender, EmailSender>();
-
+// Configuración de servicios necesarios (sin los servicios de email y buscador)
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 builder.Services.AddSession(options =>
@@ -56,21 +21,13 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
-    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
-    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-});
-
-builder.Services.AddScoped<IBuscadorLinkedinService, BuscadorService>();
-builder.Services.AddScoped<IBuscadorAragondorks, BuscadorAragondorks>();
-
+// Configuración de rutas y controladores
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
+// Configuración de producción
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -82,8 +39,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSession();
-app.UseAuthorization();
 
+// Configuración de rutas
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -100,9 +57,6 @@ app.MapControllerRoute(
 
 app.MapControllers();
 app.MapRazorPages();
-app.MapAreaControllerRoute(
-    name: "Identity",
-    areaName: "Identity",
-    pattern: "Identity/{controller=Account}/{action=Login}/{id?}");
 
 app.Run();
+
