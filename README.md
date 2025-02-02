@@ -1,21 +1,20 @@
 ```markdown
-# 🛡️ aradorknet | Open-Source Cyberintelligence Solution 🌐
+# 🛡️ aradork Open-Source Cyberintelligence Solution 🌐
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![.NET 9.0](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/{USER}/{REPO}/dotnet.yml?branch=main)](https://github.com/{USER}/{REPO}/actions)
 
-> **Automate Google Dorking & Cyber Tracking Operations** with this modular .NET 9.0 solution. Built for cybersecurity professionals and ethical hackers. 🔍💻
+> **Automate Dorking & Cyber Tracking Operations** with this modular .NET 9.0 solution. Built for cybersecurity professionals and ethical hackers. 🔍💻
 
 ---
 
 ## 🚀 Features
 
-- 🤖 **Google Dorking Automation**: Execute advanced search queries programmatically for OSINT investigations.
+- 🤖 **Local Dorking Automation**: Execute advanced search queries programmatically for OSINT investigations.
 - 🛰️ **Cyber Tracking**: Monitor and collect intelligence from diverse web sources in real-time.
 - 🧩 **Modular Architecture**: Extend functionality with plugins for custom workflows.
 - 🖥️ **CLI & Web Interface**: Operate via console or access the dashboard at `http://localhost:5353`.
-- 🔐 **Secure by Design**: Runs on dedicated port 5353 with minimal attack surface.
 
 ---
 
@@ -76,8 +75,7 @@ We welcome contributions! Please follow these steps:
 ## 👥 Developed By
 
 - **Ruben Vasile Marcu Ungureanu**  
-  [![GitHub](https://img.shields.io/badge/GitHub-@rvmu--araintel-181717?logo=github)](https://github.com/rvmu-araintel)  
-  [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?logo=linkedin)](https://www.linkedin.com/in/ruben-vasile-marcu-ungureanu)
+  [![GitHub](https://img.shields.io/badge/GitHub-@rvmu--araintel-181717?logo=github)](https://github.com/ruenvmu)  
 
 ---
 
@@ -89,13 +87,3 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for details.
 
 > ⭐ **Star this repo** if you find it useful! Your support helps us improve cybersecurity tools for the community. 🚨
 ``` 
-
-**Key Improvements:**
-- Added dynamic badges for license, .NET version, and build status
-- Organized content into clear sections with emojis
-- Included code syntax highlighting and table formatting
-- Added call-to-action elements (star repo, contribution steps)
-- Improved visual hierarchy with dividers and icons
-- Made CLI commands more prominent
-- Added parameter table for quick reference
-- Responsive design ready for GitHub markdown rendering
