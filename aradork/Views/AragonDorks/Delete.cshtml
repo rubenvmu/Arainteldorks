@@ -1,0 +1,32 @@
+@model aradork.Models.AragonDorks
+
+@{
+    ViewData["Title"] = "Eliminar Dork";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+    <h4 class="text-danger">¿Estás seguro que deseas eliminar este dork?</h4>
+    <hr />
+    
+    <dl class="row">
+        <dt class="col-sm-3">Nombre:</dt>
+        <dd class="col-sm-9">@Model.Nombre</dd>
+
+        <dt class="col-sm-3">Valor del Dork:</dt>
+        <dd class="col-sm-9"><code>@Model.DorkValue</code></dd>
+
+        <dt class="col-sm-3">Descripción:</dt>
+        <dd class="col-sm-9">@Model.Descripcion</dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash-alt"></i> Confirmar eliminación
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Cancelar
+        </a>
+    </form>
+</div>

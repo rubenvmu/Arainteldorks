@@ -1,0 +1,30 @@
+@model aradork.Models.AragonDorks
+
+@{
+    ViewData["Title"] = "Detalles del Dork";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+    <hr />
+    
+    <dl class="row">
+        <dt class="col-sm-3">Nombre:</dt>
+        <dd class="col-sm-9">@Model.Nombre</dd>
+
+        <dt class="col-sm-3">Valor del Dork:</dt>
+        <dd class="col-sm-9"><code>@Model.DorkValue</code></dd>
+
+        <dt class="col-sm-3">Descripción:</dt>
+        <dd class="col-sm-9">@Model.Descripcion</dd>
+    </dl>
+    
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Editar
+        </a>
+        <a asp-action="Index" class="btn btn-secondary
+        ">
+            <i class="fas fa-arrow-left"></i> Volver al listado
+        </a>
+    </div>

@@ -15,9 +15,11 @@ namespace aradork.Services
         public async Task<List<AragonDorks>> SearchDorks(string searchTerm)
 {
     return await _context.AragonDorks
-        .Where(d => d.Nombre.Contains(searchTerm) || 
-                   d.DorkValue.Contains(searchTerm) || 
-                   d.Descripcion.Contains(searchTerm))
+        .Where(d => 
+            (d.Nombre ?? string.Empty).Contains(searchTerm) ||
+            (d.DorkValue ?? string.Empty).Contains(searchTerm) ||
+            (d.Descripcion ?? string.Empty).Contains(searchTerm)
+        )
         .ToListAsync();
 }
 
