@@ -32,33 +32,9 @@
 git clone https://github.com/{USER}/{REPO}.git
 cd {REPO}
 
-# 2. Restore dependencies
-dotnet restore
+# 4. Run 
+dotnet run 
 
-# 3. Build the project
-dotnet build --configuration Release
-
-# 4. Run (Port 5353 by default)
-dotnet run --urls=http://localhost:5353
-```
-
-🌐 Access the web interface: [http://localhost:5353](http://localhost:5353)
-
----
-
-## 🕹️ Usage
-
-```bash
-# Sample CLI command for Google Dorking
-dotnet run --module=GoogleDork --query="site:example.com filetype:pdf"
-```
-
-| Module         | Description                     | Parameters              |
-|----------------|---------------------------------|-------------------------|
-| `GoogleDork`   | Execute custom search patterns  | `--query`, `--max-results` |
-| `Tracker`      | Monitor target entities         | `--target`, `--interval`  |
-
----
 
 ## 🤝 Contributing
 
@@ -75,7 +51,7 @@ We welcome contributions! Please follow these steps:
 ## 👥 Developed By
 
 - **Ruben Vasile Marcu Ungureanu**  
-  [![GitHub](https://img.shields.io/badge/GitHub-@rvmu--araintel-181717?logo=github)](https://github.com/ruenvmu)  
+  [![GitHub](https://img.shields.io/badge/GitHub-@rubenvmu?logo=github)](https://github.com/rubenvmu)  
 
 ---
 
