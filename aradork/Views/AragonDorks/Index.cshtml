@@ -1,22 +1,15 @@
-﻿@model IEnumerable<aradork.Models.AragonDorks>  // Usar el modelo correcto
-
-@foreach (var item in Model)
-{
-    <tr>
-        <td>@item.Id</td>
-        <td>@item.DorkValue</td>
-    </tr>
-}
+﻿@model IEnumerable<aradork.Models.AragonDorks>
 
 @{
-    ViewData["Title"] = "Aradorks";
+    ViewData["Title"] = "Aragon Dorks";
 }
 
-<div style="height: 40px;"></div>
-
-<h2>AraDorks</h2>
-
-<partial name="_FiltroAragonDorks" model="Model" />
-
-<partial name="_TablaDorks" model="Model" />
-
+<div class="container mt-4">
+    <h2 class="mb-4">Administración de Dorks</h2>
+    
+    <!-- Filtro de búsqueda -->
+    <partial name="_FiltroAragonDorks" />
+    
+    <!-- Tabla de resultados -->
+    <partial name="_TablaDorks" />
+</div>

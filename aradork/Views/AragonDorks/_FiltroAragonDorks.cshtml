@@ -1,10 +1,26 @@
-﻿@model IEnumerable<AragonDorks>
+﻿@model IEnumerable<aradork.Models.AragonDorks>
 
-@{
-}
-
-<form asp-action="SearchDorks" method="get">
-    <input type="search" id="search-input" placeholder="Buscar" name="searchString" value="@ViewData["CurrentFilter"]" />
-    <input type="number" id="id-input" placeholder="ID" name="id" value="@ViewData["CurrentId"]" />
-    <input type="submit" value="Search" class="btn btn-dark" /><p><input type="button" value="Atrás" onclick="location.href='@Url.Action("Index", "Home")'" class="btn btn-dark" /></p>
-</form>
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <form asp-action="SearchDorks" method="get" class="form-inline">
+            <div class="input-group w-100">
+                <input type="search" 
+                       name="searchTerm" 
+                       class="form-control form-control-lg" 
+                       placeholder="Buscar dorks por nombre, valor o descripción..."
+                       aria-label="Buscar">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </div>
+        </form>
+        
+        <div class="mt-3">
+            <a asp-action="Create" class="btn btn-success">
+                <i class="fas fa-plus-circle"></i> Nuevo Dork
+            </a>
+        </div>
+    </div>
+</div>
