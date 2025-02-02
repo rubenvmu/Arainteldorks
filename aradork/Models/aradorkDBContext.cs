@@ -18,7 +18,7 @@ namespace aradork.Models
         {
             modelBuilder.Entity<Agendum>(entity =>
             {
-                entity.HasKey(e => e.Firstname).HasName("PK__agenda__071F893BEFEC13FF");
+                entity.HasKey(e => e.Firstname).HasName("PK_Agenda_Firstname");
                 entity.ToTable("agenda");
 
                 entity.Property(e => e.Firstname)
